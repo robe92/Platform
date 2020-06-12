@@ -20,6 +20,7 @@ public class PulsDAOImplement implements PulsDAO {
                 statement.setTimestamp(3, tid[i]);
                 statement.addBatch();
             }
+            statement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -34,9 +35,9 @@ public class PulsDAOImplement implements PulsDAO {
 
         try {
             Statement statement = conn.createStatement();
-            ResultSet show_tables = statement.executeQuery("SELECT Temp FROM Målinger");
+            ResultSet show_tables = statement.executeQuery("SELECT * FROM Patienter, PULS WHERE Patienter.ID=PULS.Patient_ID AND Patienter.Cpr=?");
             while (show_tables.next()) {
-                PulsDTO.setPuls(show_tables.getInt("Puls"));
+                pulsDTO.setPulsList(new int[]{show_tables.getInt("PULS")});
             }
             return pulsDTO;
         } catch (SQLException e) {
